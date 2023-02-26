@@ -22,10 +22,9 @@ export class SessionCardComponent implements OnInit {
   
   constructor(private router: Router, private sessionService: SessionService, private toast: ToastService, private localStorage: LocalStorageService) { }
   
-  async ngOnInit() {
+  ngOnInit() {
     if(this.data.startDate){
       this.startDate = new Date(this.data.startDate).toLocaleString();
-      console.log(this.startDate)
     }
   }
  

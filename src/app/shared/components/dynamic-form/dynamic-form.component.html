@@ -88,8 +88,8 @@
       >
         <ion-select-option
           *ngFor="let option of control.options"
-          [value]="[option]"
-          >{{ option.label }}</ion-select-option
+          [value]="option._id || [option]"
+          >{{ option.name || option.label }}</ion-select-option
         >
       </ion-select>
       <app-input-chip

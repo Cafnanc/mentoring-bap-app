@@ -30,7 +30,7 @@ interface JsonFormControlOptions {
   step?: string;
   icon?: string;
 }
-interface JsonFormControls {
+export interface JsonFormControls {
   name: string;
   label: string;
   value: string;

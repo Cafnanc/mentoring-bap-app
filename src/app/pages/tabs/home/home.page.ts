@@ -65,7 +65,6 @@ export class HomePage implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private navController: NavController,
     private profileService: ProfileService,
     private loaderService: LoaderService,
     private httpService: HttpService,
@@ -122,7 +121,6 @@ export class HomePage implements OnInit {
     this.profileService.profileDetails().then(data => {
       this.user = data
       this.isAMentor = this.user.isAMentor;
-      console.log(this.isAMentor,data)
       if (!this.user?.hasAcceptedTAndC) {
         this.openModal();
       }
@@ -166,7 +164,8 @@ export class HomePage implements OnInit {
 
   async search() {
     let sessionData = await this.getSessionsFromBAPServer();
-    this.arrangeSessionDetails(sessionData);
+    this.sessions = await this.arrangeSessionDetails(sessionData);
+    console.log(this.sessions)
   }
   async getSessionsFromBAPServer() {
     await this.loaderService.startLoader();
@@ -176,6 +175,7 @@ export class HomePage implements OnInit {
     };
     try {
       let data: any = await this.httpService.get(config);
+      console.log(data)
       if(Array.isArray(data.data)){
         await this.loaderService.stopLoader();
         return data.data;
@@ -189,31 +189,36 @@ export class HomePage implements OnInit {
     }
   }
 
-  arrangeSessionDetails(dataArray: any[]) {
+  async arrangeSessionDetails(dataArray: any[]) {
+    console.log(dataArray)
     dataArray.forEach( bppData => {
-      this.categories = this.categories.concat(bppData.message.catalog['bpp/categories']);
-      bppData.message.catalog['bpp/providers'].forEach(provider => {
+      console.log(bppData)
+      bppData.message.catalog['providers'].forEach(provider => {
         provider.items.map(item => {
           item.context = bppData.context;
           item.providerName = provider.descriptor.name;
-          item.bppName = bppData.message.catalog['bpp/descriptor'].name;
+          item.bppName = bppData.message.catalog['descriptor'].name;
+          this.categories = this.categories.concat(provider['categories']);
+          this.fulfillments = this.fulfillments.concat(provider['fulfillments']);
         })
         this.providersItems = this.providersItems.concat(provider.items);
       })
-      this.fulfillments = this.fulfillments.concat(bppData.message.catalog['fulfillments']);
     });
-    this.mapSessionDetails().then((sessions)=>{
-      this.sessions = sessions;
-    })
+    let sessions = await this.mapSessionDetails();
+    // this.sessions = sessions;
+    return sessions;
   }
 
 
   mapSessionDetails(): Promise<Array<object>> {
+    let i = 0;
     return new Promise((resolve, reject) => {
       let sessions = [];
       this.providersItems.forEach( session => {
         let categories = [];
         let fulfillment = this.fulfillments.find(element => element.id === session.fulfillment_id)
+        console.log(this.categories)
+        console.log(session)
         categories = categories.concat(this.categories.find(element => element.id === session.category_id).descriptor.name)
         let sessionData: sessionData = {
           itemId: session.id,
@@ -235,6 +240,8 @@ export class HomePage implements OnInit {
         }
         sessions = sessions.concat(sessionData);
       })
+      i++;
+      console.log(i)
       resolve(sessions)
     })
   }

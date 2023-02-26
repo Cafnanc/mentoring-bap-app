@@ -30,7 +30,6 @@ export class SessionDetailPage implements OnInit {
     private loaderService: LoaderService, private utilService: UtilService, private toast: ToastService,
     private _location: Location, private alertController: AlertController, private user: UserService) {
     this.detailData.data = history.state.data;
-    console.log(this.detailData.data)
     this.startDate = new Date(this.detailData.data.startDate).toLocaleString();
   }
   public headerConfig: any = {

@@ -100,7 +100,10 @@ export class CreatedByMePage implements OnInit {
   }
 
   async eventAction(event) {
-    let result = await this.sessionService.startSession(event.data._id);
-    result?this.router.navigate([`/${CommonRoutes.TABS}/${CommonRoutes.HOME}`]):null;
+    console.log(event)
+    if(typeof event!=='undefined'){
+      let result = await this.sessionService.startSession(event.data._id);
+      result?this.router.navigate([`/${CommonRoutes.TABS}/${CommonRoutes.HOME}`]):null;
+    }
   }
 }

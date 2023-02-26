@@ -4,6 +4,7 @@ import { urlConstants } from '../../constants/urlConstants';
 import * as _ from 'lodash-es';
 import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { Router } from '@angular/router';
+import { CommonRoutes } from 'src/global.routes';
 
 @Injectable({
   providedIn: 'root'
@@ -139,7 +140,7 @@ async getSessionsList(obj) {
       let data = await this.httpService.get(config);
       this.loaderService.stopLoader();
       if (data.responseCode == "OK") {
-        this.openBrowser(data.result.link);
+        this.openBrowser(data.result.link,id);
         return true;
       } else {
         return false;
@@ -161,7 +162,7 @@ async getSessionsList(obj) {
       let data = await this.httpService.get(config);
       this.loaderService.stopLoader();
       if (data.responseCode == "OK") {
-        this.openBrowser(data.result.link);
+        this.openBrowser(data.result.link,id);
       }
     }
     catch (error) {
@@ -185,9 +186,10 @@ async getSessionsList(obj) {
     }
   }
 
-  openBrowser(link) {
+  openBrowser(link,id) {
     let browser = this.inAppBrowser.create(link, `_system`);
     browser.on('exit').subscribe(() => {
+      this.router.navigate([CommonRoutes.SESSIONS_DETAILS+id])
     }, err => {
       console.error(err);
     });

@@ -24,8 +24,8 @@ const routes: Routes = [
         loadChildren: () => import('./tab2/tab2.module').then(m => m.Tab2PageModule)
       },
       {
-        path: CommonRoutes.DASHBOARD,
-        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardPageModule)
+        path: CommonRoutes.CREATED_BY_ME,
+        loadChildren: () => import('../created-by-me/created-by-me.module').then(m => m.CreatedByMePageModule)
       },
       {
         path: CommonRoutes.PROFILE,

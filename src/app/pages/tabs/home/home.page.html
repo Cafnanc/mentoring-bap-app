@@ -3,25 +3,25 @@
     <h3>
       {{'WELCOME'| translate}} {{ user?.name }}!
     </h3>
-    <ion-col *ngIf="!isAMentor" class="welcome-note" size="12">{{'WELCOME_NOTE' | translate}}</ion-col>
-    <ion-col *ngIf="isAMentor" class="welcome-note" size="12">{{'WELCOME_MENTOR' | translate}}</ion-col>
-    <ion-col *ngIf="!isAMentor" size="12" class="ion-no-padding">
+    <!-- <ion-col *ngIf="!isAMentor" class="welcome-note" size="12">{{'WELCOME_NOTE' | translate}}</ion-col> -->
+    <ion-col class="welcome-note" size="12">{{'WELCOME_MENTOR' | translate}}</ion-col>
+    <!-- <ion-col *ngIf="!isAMentor" size="12" class="ion-no-padding">
       <div class="d-flex">
         <ion-searchbar class="search-bar ion-margin-top" placeholder="{{'HOME_SEARCH_PLACEHOLDER' | translate}}"
           [(ngModel)]="searchText" (ionChange)="search()" debounce="1000">
         </ion-searchbar>
       </div>
-    </ion-col>
+    </ion-col> -->
   </ion-row>
 </app-page-header>
 <ion-content>
-  <div *ngIf="!isAMentor && sessions">
+  <!-- <div *ngIf="!isAMentor && sessions && sessions?.length">
     <div class="my-10" *ngFor="let session of sessions">
       <app-session-card [data]="session" (onClickEvent)="eventAction($event)">
       </app-session-card>
     </div>
-  </div>
-  <div *ngIf="isAMentor" class="mentor-div">
+  </div> -->
+  <div class="mentor-div">
     <ion-card class="session-sqr-card">
       <ion-card-content class="card-content">
         <div class="segment-button d-flex flex-justify-center flex-align-items-flex-end">
@@ -34,8 +34,8 @@
     </ion-card>
   </div>
 </ion-content>
-<div *ngIf="!isAMentor && !sessions" class="no-data-div">
+<!-- <div *ngIf="!isAMentor && !sessions" class="no-data-div">
   <div>
     <p class="content-label">{{ "HOME_SEARCH_LABEL" | translate }}</p>
   </div>
-</div>
+</div> -->

@@ -31,7 +31,7 @@
           <div *ngIf="sessions?.length; else elseBlockTwo">
             <ion-list>
               <div class="list">
-                <app-session-card-template *ngFor="let session of sessions" [data]="session" [showStart]=false>
+                <app-session-card-template *ngFor="let session of sessions" (onClickEvent)="eventAction($event)" [data]="session" [showStart]=false>
                 </app-session-card-template>
               </div>
             </ion-list>
@@ -77,7 +77,7 @@
   </ion-footer>
 </div>
 <ng-template #footerElseBlock>
-  <ion-footer class="ion-no-border">
+  <!-- <ion-footer class="ion-no-border">
     <ion-button (click)="goToHome()" expand="full">{{"HOME" | translate}}</ion-button>
-  </ion-footer>
+  </ion-footer> -->
 </ng-template>

@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService, ToastService } from 'src/app/core/services';
+import { AuthService, HttpService, LoaderService, ToastService } from 'src/app/core/services';
 import {
   DynamicFormComponent,
+  JsonFormControls,
   JsonFormData,
 } from 'src/app/shared/components/dynamic-form/dynamic-form.component';
 import * as _ from 'lodash-es';
@@ -9,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonRoutes } from 'src/global.routes';
 import { TranslateService } from '@ngx-translate/core';
 import { ProfileService } from 'src/app/core/services/profile/profile.service';
+import { urlConstants } from 'src/app/core/constants/urlConstants';
 
 @Component({
   selector: 'app-register',
@@ -75,6 +77,20 @@ export class RegisterPage implements OnInit {
     ]
   };
 
+  organizationControl: JsonFormControls = {
+    name: 'organisationId',
+    label: 'Organisation',
+    value: '',
+    class: 'ion-margin',
+    type: 'select',
+    position: 'floating',
+    options: {},
+    errorMessage:'Please select your organization',
+    validators: {
+      required: true,
+    },
+  }
+
   secretCodeControl = {
     name: 'secretCode',
     label: 'Secret code',
@@ -94,7 +110,7 @@ export class RegisterPage implements OnInit {
     },
     notification: false,
   };
-
+  showForm=false;
   //to be removed
   secretCode: string = "";
   userType: any;
@@ -102,21 +118,45 @@ export class RegisterPage implements OnInit {
   labels = ["SIGN_UP_TO_MENTOR_ED"]
 
   constructor(
-    private authService: AuthService,
+    private http: HttpService,
     private toastService: ToastService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private translateService: TranslateService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private loaderService: LoaderService
   ) {
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.userType = params.userType;
-      if (this.userType == "mentor") {
-        this.formData.controls.push(this.secretCodeControl);
-        this.isAMentor = true;
-      }
-    });
+    this.getOrganizations().then(()=>{
+      this.formData.controls.push(this.organizationControl);
+      this.activatedRoute.queryParams.subscribe(params => {
+        this.userType = params.userType;
+        if (this.userType == "mentor") {
+          this.formData.controls.push(this.secretCodeControl);
+          this.showForm = true;
+          this.isAMentor = true;
+        }
+      });
+    })
   }
+
+  async getOrganizations(showToast=true) {
+    await this.loaderService.startLoader();
+    const config = {
+      url: urlConstants.API_URLS.GET_ORGANIZATION_LIST,
+      payload: {}
+    };
+    try {
+      let data: any = await this.http.get(config);
+      console.log(data)
+      this.organizationControl.options = data.result.data;
+      this.loaderService.stopLoader();
+      return data;
+    }
+    catch (error) {
+      this.loaderService.stopLoader();
+    }
+  }
+
   ngOnInit() {
     this.translateText();
   }

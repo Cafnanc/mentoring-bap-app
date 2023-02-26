@@ -53,13 +53,12 @@ export class HttpService {
     const headers = requestParam.headers ? requestParam.headers : await this.setHeaders();
     let body = requestParam.payload ? requestParam.payload : {};
     this.http.setDataSerializer('json');
-    this.http.setRequestTimeout(60);
     return this.http.post(this.baseUrl + requestParam.url, body, headers)
       .then((data: any) => {
         let result: any = JSON.parse(data.data);
-        if (data.status === 200) {
+        //if (data.status === 200) {
           return result;
-        }
+        //}
       }, error => {
         return this.handleError(error);
       });
